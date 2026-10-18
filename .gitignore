@@ -1,0 +1,9 @@
+bin/
+*/target/
+web/node_modules/
+web/dist/*
+!web/dist/.gitkeep
+*.log
+.env
+coverage.out
+*.tsbuildinfo

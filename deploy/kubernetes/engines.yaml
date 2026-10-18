@@ -1,0 +1,121 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: marketplace-search
+  labels:
+    app.kubernetes.io/name: marketplace
+    app.kubernetes.io/component: search
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: marketplace
+      app.kubernetes.io/component: search
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: marketplace
+        app.kubernetes.io/component: search
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65532
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: search
+          image: marketplace
+          command: ["/usr/local/bin/search-engine"]
+          ports:
+            - { name: http, containerPort: 8092 }
+          env:
+            - name: INTERNAL_TOKEN
+              valueFrom:
+                secretKeyRef: { name: marketplace, key: INTERNAL_TOKEN }
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: ["ALL"]
+          resources:
+            requests: { cpu: 50m, memory: 32Mi }
+            limits: { memory: 512Mi }
+          readinessProbe:
+            httpGet: { path: /readyz, port: http }
+          livenessProbe:
+            httpGet: { path: /healthz, port: http }
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: marketplace-search
+spec:
+  selector:
+    app.kubernetes.io/name: marketplace
+    app.kubernetes.io/component: search
+  ports:
+    - { name: http, port: 8092, targetPort: http }
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: marketplace-fraud
+  labels:
+    app.kubernetes.io/name: marketplace
+    app.kubernetes.io/component: fraud
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: marketplace
+      app.kubernetes.io/component: fraud
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: marketplace
+        app.kubernetes.io/component: fraud
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65532
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: fraud
+          image: marketplace
+          command: ["/usr/local/bin/fraud-engine"]
+          ports:
+            - { name: http, containerPort: 8093 }
+          env:
+            - name: INTERNAL_TOKEN
+              valueFrom:
+                secretKeyRef: { name: marketplace, key: INTERNAL_TOKEN }
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: ["ALL"]
+          resources:
+            requests: { cpu: 25m, memory: 16Mi }
+            limits: { memory: 128Mi }
+          readinessProbe:
+            httpGet: { path: /readyz, port: http }
+          livenessProbe:
+            httpGet: { path: /healthz, port: http }
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: marketplace-fraud
+spec:
+  selector:
+    app.kubernetes.io/name: marketplace
+    app.kubernetes.io/component: fraud
+  ports:
+    - { name: http, port: 8093, targetPort: http }

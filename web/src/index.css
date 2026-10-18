@@ -1,0 +1,73 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Public Sans Variable", ui-sans-serif, system-ui, sans-serif;
+  --color-ink: #1b2430;
+  --color-slate: #2b3644;
+  --color-page: #f0f1f2;
+  --color-line: #d5d9dd;
+  --color-muted: #5b6573;
+  --color-saffron: #f2b705;
+  --color-saffron-dark: #d9a404;
+  --color-amber: #e8871e;
+  --color-amber-dark: #cf7616;
+  --color-teal: #0b6e79;
+  --color-teal-dark: #08535b;
+  --color-star: #e09b0a;
+  --color-ok: #1e7d45;
+  --color-bad: #b3261e;
+  --radius-panel: 4px;
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    @apply bg-page text-ink font-sans antialiased;
+    font-size: 15px;
+    line-height: 1.5;
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-teal);
+    outline-offset: 2px;
+  }
+  h1, h2, h3 {
+    line-height: 1.25;
+  }
+}
+
+@utility panel {
+  @apply bg-white border border-line rounded-[var(--radius-panel)];
+}
+@utility btn {
+  @apply inline-flex items-center justify-center gap-2 rounded-full px-4 py-2 text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed;
+}
+@utility btn-primary {
+  @apply btn bg-saffron text-ink hover:bg-saffron-dark;
+}
+@utility btn-buy {
+  @apply btn bg-amber text-ink hover:bg-amber-dark;
+}
+@utility btn-quiet {
+  @apply btn bg-white text-ink border border-line hover:bg-page;
+}
+@utility link {
+  @apply text-teal hover:text-teal-dark hover:underline;
+}
+@utility field {
+  @apply w-full rounded-[3px] border border-[#9aa3ad] bg-white px-3 py-2 text-sm shadow-[inset_0_1px_2px_rgba(0,0,0,.08)] focus:border-teal focus:outline-none focus:ring-2 focus:ring-teal/25;
+}
+@utility label {
+  @apply mb-1 block text-sm font-semibold;
+}
+@utility tnum {
+  font-variant-numeric: tabular-nums;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}

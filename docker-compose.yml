@@ -1,0 +1,72 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: marketplace
+      POSTGRES_PASSWORD: marketplace
+      POSTGRES_DB: marketplace
+    volumes:
+      - db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "marketplace"]
+      interval: 3s
+      retries: 20
+
+  migrate:
+    image: marketplace:local
+    build: .
+    command: ["migrate"]
+    environment: &env
+      DATABASE_URL: postgres://marketplace:marketplace@db:5432/marketplace?sslmode=disable
+      JWT_SECRET: local-development-secret-change-me-please
+      SEED_PASSWORD: demo-pass-123
+      SEARCH_URL: http://search:8092
+      FRAUD_URL: http://fraud:8093
+      INTERNAL_TOKEN: local-internal-token
+      LOG_FORMAT: text
+    depends_on:
+      db:
+        condition: service_healthy
+
+  seed:
+    image: marketplace:local
+    command: ["seed"]
+    environment: *env
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+
+  app:
+    image: marketplace:local
+    command: ["serve"]
+    environment: *env
+    ports:
+      - "8080:8080"
+    read_only: true
+    healthcheck:
+      test: ["CMD", "/usr/local/bin/marketplace", "healthcheck"]
+      interval: 5s
+    depends_on:
+      seed:
+        condition: service_completed_successfully
+      search:
+        condition: service_started
+      fraud:
+        condition: service_started
+
+  search:
+    image: marketplace:local
+    entrypoint: ["/usr/local/bin/search-engine"]
+    environment:
+      INTERNAL_TOKEN: local-internal-token
+    read_only: true
+
+  fraud:
+    image: marketplace:local
+    entrypoint: ["/usr/local/bin/fraud-engine"]
+    environment:
+      INTERNAL_TOKEN: local-internal-token
+    read_only: true
+
+volumes:
+  db:
