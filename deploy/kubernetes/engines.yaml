@@ -1,9 +1,9 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: marketplace-search
+  name: mercatus-search
   labels:
-    app.kubernetes.io/name: marketplace
+    app.kubernetes.io/name: mercatus
     app.kubernetes.io/component: search
 spec:
   replicas: 1
@@ -11,12 +11,12 @@ spec:
     type: Recreate
   selector:
     matchLabels:
-      app.kubernetes.io/name: marketplace
+      app.kubernetes.io/name: mercatus
       app.kubernetes.io/component: search
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: marketplace
+        app.kubernetes.io/name: mercatus
         app.kubernetes.io/component: search
     spec:
       automountServiceAccountToken: false
@@ -27,14 +27,14 @@ spec:
           type: RuntimeDefault
       containers:
         - name: search
-          image: marketplace
+          image: mercatus
           command: ["/usr/local/bin/search-engine"]
           ports:
             - { name: http, containerPort: 8092 }
           env:
             - name: INTERNAL_TOKEN
               valueFrom:
-                secretKeyRef: { name: marketplace, key: INTERNAL_TOKEN }
+                secretKeyRef: { name: mercatus, key: INTERNAL_TOKEN }
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
@@ -51,10 +51,10 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: marketplace-search
+  name: mercatus-search
 spec:
   selector:
-    app.kubernetes.io/name: marketplace
+    app.kubernetes.io/name: mercatus
     app.kubernetes.io/component: search
   ports:
     - { name: http, port: 8092, targetPort: http }
@@ -62,9 +62,9 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: marketplace-fraud
+  name: mercatus-fraud
   labels:
-    app.kubernetes.io/name: marketplace
+    app.kubernetes.io/name: mercatus
     app.kubernetes.io/component: fraud
 spec:
   replicas: 1
@@ -72,12 +72,12 @@ spec:
     type: Recreate
   selector:
     matchLabels:
-      app.kubernetes.io/name: marketplace
+      app.kubernetes.io/name: mercatus
       app.kubernetes.io/component: fraud
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: marketplace
+        app.kubernetes.io/name: mercatus
         app.kubernetes.io/component: fraud
     spec:
       automountServiceAccountToken: false
@@ -88,14 +88,14 @@ spec:
           type: RuntimeDefault
       containers:
         - name: fraud
-          image: marketplace
+          image: mercatus
           command: ["/usr/local/bin/fraud-engine"]
           ports:
             - { name: http, containerPort: 8093 }
           env:
             - name: INTERNAL_TOKEN
               valueFrom:
-                secretKeyRef: { name: marketplace, key: INTERNAL_TOKEN }
+                secretKeyRef: { name: mercatus, key: INTERNAL_TOKEN }
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
@@ -112,10 +112,10 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: marketplace-fraud
+  name: mercatus-fraud
 spec:
   selector:
-    app.kubernetes.io/name: marketplace
+    app.kubernetes.io/name: mercatus
     app.kubernetes.io/component: fraud
   ports:
     - { name: http, port: 8093, targetPort: http }

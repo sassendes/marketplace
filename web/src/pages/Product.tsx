@@ -100,6 +100,7 @@ function BuyBox({ product, variantId }: { product: Product; variantId: number })
         <ShieldCheck size={16} className="shrink-0 text-ok" aria-hidden />
         After payment the seller delivers your license key or download link to your account email.
       </p>
+      <p className="mt-2 text-xs text-muted">The price shown is what you pay. No fees are added at checkout.</p>
     </div>
   );
 }

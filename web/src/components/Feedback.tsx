@@ -1,14 +1,23 @@
 import { AlertTriangle, CheckCircle2 } from "lucide-react";
 import type { ReactNode } from "react";
 
-export function Alert({ tone = "bad", children }: { tone?: "bad" | "ok"; children: ReactNode }) {
+export function Alert({ tone = "bad", children, action }: { tone?: "bad" | "ok"; children: ReactNode; action?: ReactNode }) {
   const Icon = tone === "bad" ? AlertTriangle : CheckCircle2;
   const color = tone === "bad" ? "border-bad/40 bg-[#fdf3f2] text-bad" : "border-ok/40 bg-[#f1f8f3] text-ok";
   return (
     <div role={tone === "bad" ? "alert" : "status"} className={`flex items-start gap-2 rounded-[var(--radius-panel)] border px-3 py-2 text-sm ${color}`}>
       <Icon size={18} className="mt-px shrink-0" aria-hidden />
-      <div className="text-ink">{children}</div>
+      <div className="flex-1 text-ink">{children}</div>
+      {action && <div className="shrink-0">{action}</div>}
     </div>
+  );
+}
+
+export function RetryButton({ onClick }: { onClick: () => void }) {
+  return (
+    <button type="button" onClick={onClick} className="rounded-[6px] border border-line bg-white px-3 py-1 text-xs font-medium text-ink hover:bg-page">
+      Try again
+    </button>
   );
 }
 

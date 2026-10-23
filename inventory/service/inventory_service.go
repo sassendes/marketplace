@@ -5,8 +5,8 @@ import (
 	"errors"
 	"time"
 
-	"marketplace/inventory/model"
-	"marketplace/inventory/repository"
+	"mercatus/inventory/model"
+	"mercatus/inventory/repository"
 )
 
 var (

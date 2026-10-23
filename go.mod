@@ -1,4 +1,4 @@
-module marketplace
+module mercatus
 
 go 1.26.10
 

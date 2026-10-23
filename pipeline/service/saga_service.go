@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"log/slog"
 
-	"marketplace/pipeline/model"
-	"marketplace/pipeline/repository"
+	"mercatus/pipeline/model"
+	"mercatus/pipeline/repository"
 )
 
 type Step struct {

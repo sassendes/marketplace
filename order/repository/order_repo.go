@@ -5,7 +5,7 @@ import (
 	"database/sql"
 	"errors"
 
-	"marketplace/order/model"
+	"mercatus/order/model"
 
 	"github.com/lib/pq"
 )

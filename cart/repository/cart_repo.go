@@ -6,7 +6,7 @@ import (
 	"encoding/json"
 	"errors"
 
-	"marketplace/cart/model"
+	"mercatus/cart/model"
 )
 
 var ErrNotFound = errors.New("not found")

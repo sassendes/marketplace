@@ -17,7 +17,7 @@ const (
 	RoleKey   contextKey = "role"
 )
 
-const issuer = "marketplace"
+const issuer = "mercatus"
 
 type Claims struct {
 	UserID int64  `json:"user_id"`

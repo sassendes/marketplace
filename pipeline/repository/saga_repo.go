@@ -6,8 +6,8 @@ import (
 	"errors"
 	"time"
 
-	"marketplace/pipeline/model"
-	"marketplace/platform/database"
+	"mercatus/pipeline/model"
+	"mercatus/platform/database"
 )
 
 var ErrDuplicateKey = errors.New("checkout already started with this key")

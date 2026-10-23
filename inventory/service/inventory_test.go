@@ -7,9 +7,9 @@ import (
 	"sync/atomic"
 	"testing"
 
-	"marketplace/inventory/model"
-	"marketplace/inventory/repository"
-	"marketplace/platform/database/dbtest"
+	"mercatus/inventory/model"
+	"mercatus/inventory/repository"
+	"mercatus/platform/database/dbtest"
 )
 
 func TestNoOversellUnderConcurrency(t *testing.T) {

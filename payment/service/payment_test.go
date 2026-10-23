@@ -6,9 +6,9 @@ import (
 	"sync"
 	"testing"
 
-	"marketplace/payment/model"
-	"marketplace/payment/repository"
-	"marketplace/platform/database/dbtest"
+	"mercatus/payment/model"
+	"mercatus/payment/repository"
+	"mercatus/platform/database/dbtest"
 )
 
 func charge() *model.ChargeRequest {

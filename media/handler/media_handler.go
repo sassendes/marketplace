@@ -7,9 +7,9 @@ import (
 	"net/http"
 	"strconv"
 
-	"marketplace/media/middleware"
-	"marketplace/media/model"
-	"marketplace/media/service"
+	"mercatus/media/middleware"
+	"mercatus/media/model"
+	"mercatus/media/service"
 
 	"github.com/go-chi/chi/v5"
 )

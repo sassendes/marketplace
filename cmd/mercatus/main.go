@@ -13,23 +13,23 @@ import (
 	"syscall"
 	"time"
 
-	"marketplace/platform/config"
-	"marketplace/platform/database"
-	"marketplace/platform/observability"
-	"marketplace/schema"
-	"marketplace/seed"
+	"mercatus/platform/config"
+	"mercatus/platform/database"
+	"mercatus/platform/observability"
+	"mercatus/schema"
+	"mercatus/seed"
 )
 
 var version = "dev"
 
-const usage = `marketplace - multi-seller marketplace in one binary
+const usage = `mercatus - multi-seller software marketplace in one binary
 
 usage:
-  marketplace serve [--only=auth,catalog,...]   run the http server
-  marketplace migrate                           apply database migrations
-  marketplace seed                              insert idempotent demo data
-  marketplace healthcheck                       probe the local server (for docker healthchecks)
-  marketplace version                           print the version
+  mercatus serve [--only=auth,catalog,...]   run the http server
+  mercatus migrate                           apply database migrations
+  mercatus seed                              insert idempotent demo data
+  mercatus healthcheck                       probe the local server (for docker healthchecks)
+  mercatus version                           print the version
 
 configuration is read from environment variables, see README.md
 `
@@ -127,7 +127,7 @@ func runSeed(ctx context.Context, cfg *config.Config) error {
 	if pending, err := database.PendingMigrations(ctx, db, migrations); err != nil {
 		return err
 	} else if len(pending) > 0 {
-		return fmt.Errorf("database has %d pending migrations, run `marketplace migrate` first", len(pending))
+		return fmt.Errorf("database has %d pending migrations, run `mercatus migrate` first", len(pending))
 	}
 	return seed.Run(ctx, db, seed.Options{Password: os.Getenv("SEED_PASSWORD")})
 }
@@ -152,7 +152,7 @@ func serve(ctx context.Context, cfg *config.Config) error {
 		return err
 	}
 	if len(pending) > 0 {
-		return fmt.Errorf("database schema is behind (pending: %s), run `marketplace migrate` first", strings.Join(pending, ", "))
+		return fmt.Errorf("database schema is behind (pending: %s), run `mercatus migrate` first", strings.Join(pending, ", "))
 	}
 
 	app, err := NewApp(cfg, db)
@@ -192,7 +192,7 @@ func serve(ctx context.Context, cfg *config.Config) error {
 
 	errCh := make(chan error, 1)
 	go func() {
-		slog.Info("marketplace listening", "addr", srv.Addr, "version", version, "modules", cfg.Only)
+		slog.Info("mercatus listening", "addr", srv.Addr, "version", version, "modules", cfg.Only)
 		if err := srv.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
 			errCh <- err
 		}

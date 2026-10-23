@@ -105,9 +105,9 @@ func (m *Metrics) Handler() http.Handler {
 			fmt.Fprintf(&b, "http_request_duration_seconds_sum{%s} %g\n", k, s.sum)
 			fmt.Fprintf(&b, "http_request_duration_seconds_count{%s} %d\n", k, s.count)
 		}
-		b.WriteString("# TYPE marketplace_events_total counter\n")
+		b.WriteString("# TYPE mercatus_events_total counter\n")
 		for _, k := range sortedKeys(m.counters) {
-			fmt.Fprintf(&b, "marketplace_events_total{event=%q} %d\n", k, m.counters[k])
+			fmt.Fprintf(&b, "mercatus_events_total{event=%q} %d\n", k, m.counters[k])
 		}
 		m.mu.Unlock()
 

@@ -9,9 +9,9 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"marketplace/platform/config"
-	"marketplace/platform/database/dbtest"
-	"marketplace/seed"
+	"mercatus/platform/config"
+	"mercatus/platform/database/dbtest"
+	"mercatus/seed"
 )
 
 type client struct {

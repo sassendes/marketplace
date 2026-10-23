@@ -7,8 +7,8 @@ import (
 	"net/http"
 	"strconv"
 
-	"marketplace/seller/middleware"
-	"marketplace/seller/service"
+	"mercatus/seller/middleware"
+	"mercatus/seller/service"
 
 	"github.com/go-chi/chi/v5"
 )

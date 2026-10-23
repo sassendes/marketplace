@@ -347,7 +347,7 @@ export default function SellerDashboard() {
   return (
     <Page narrow>
       <div className="mb-5 flex flex-wrap items-baseline justify-between gap-2">
-        <h1 className="text-[26px] font-normal">{seller ? seller.store_name : "Sell on sassendes.shop"}</h1>
+        <h1 className="text-[26px] font-normal">{seller ? seller.store_name : "Sell on Mercatus"}</h1>
         {seller && (
           <span className={`text-sm font-semibold ${seller.status === "active" ? "text-ok" : seller.status === "suspended" ? "text-bad" : "text-amber-dark"}`}>
             {seller.status === "active" ? "Store is live" : seller.status === "suspended" ? "Store suspended" : "Waiting for payouts"}
@@ -356,7 +356,7 @@ export default function SellerDashboard() {
       </div>
       {!seller && <Onboard onDone={load} />}
       {seller?.status === "pending" && <ConnectPayouts onDone={load} />}
-      {seller?.status === "suspended" && <Alert>Your store was suspended by the marketplace team. Your listings are hidden from buyers.</Alert>}
+      {seller?.status === "suspended" && <Alert>Your store was suspended by the Mercatus team. Your listings are hidden from buyers.</Alert>}
       {seller?.status === "active" && (
         <div className="space-y-5">
           <div role="tablist" className="flex gap-1 border-b border-line">

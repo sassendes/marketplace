@@ -4,7 +4,7 @@ import (
 	"context"
 	"database/sql"
 
-	"marketplace/media/model"
+	"mercatus/media/model"
 )
 
 type MediaRepository struct{ db *sql.DB }

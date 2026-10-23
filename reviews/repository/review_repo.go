@@ -5,8 +5,8 @@ import (
 	"database/sql"
 	"errors"
 
-	"marketplace/platform/database"
-	"marketplace/reviews/model"
+	"mercatus/platform/database"
+	"mercatus/reviews/model"
 )
 
 var (

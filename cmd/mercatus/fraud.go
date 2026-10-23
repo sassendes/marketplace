@@ -8,7 +8,7 @@ import (
 	"net/http"
 	"time"
 
-	pipelineservice "marketplace/pipeline/service"
+	pipelineservice "mercatus/pipeline/service"
 )
 
 type fraudClient struct {

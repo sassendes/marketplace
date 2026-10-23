@@ -24,13 +24,13 @@ COPY . .
 COPY --from=web /web/dist ./web/dist
 ARG VERSION=dev
 RUN --mount=type=cache,target=/go/pkg/mod --mount=type=cache,target=/root/.cache/go-build \
-    CGO_ENABLED=0 GOOS=linux go build -trimpath -ldflags "-s -w -X main.version=${VERSION}" -o /marketplace ./cmd/marketplace
+    CGO_ENABLED=0 GOOS=linux go build -trimpath -ldflags "-s -w -X main.version=${VERSION}" -o /mercatus ./cmd/mercatus
 
 FROM gcr.io/distroless/static-debian12:nonroot
-COPY --from=go /marketplace /usr/local/bin/marketplace
+COPY --from=go /mercatus /usr/local/bin/mercatus
 COPY --from=rust /search-engine /usr/local/bin/search-engine
 COPY --from=rust /fraud-engine /usr/local/bin/fraud-engine
 USER 65532:65532
 EXPOSE 8080 9090 8092 8093
-ENTRYPOINT ["/usr/local/bin/marketplace"]
+ENTRYPOINT ["/usr/local/bin/mercatus"]
 CMD ["serve"]

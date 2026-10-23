@@ -8,8 +8,8 @@ import (
 	"time"
 	"unicode/utf8"
 
-	"marketplace/notification/model"
-	"marketplace/notification/repository"
+	"mercatus/notification/model"
+	"mercatus/notification/repository"
 )
 
 var ErrInvalidInput = errors.New("invalid notification")

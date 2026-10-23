@@ -7,8 +7,8 @@ import (
 	"fmt"
 	"strings"
 
-	"marketplace/catalog/model"
-	"marketplace/platform/database"
+	"mercatus/catalog/model"
+	"mercatus/platform/database"
 
 	"github.com/lib/pq"
 )

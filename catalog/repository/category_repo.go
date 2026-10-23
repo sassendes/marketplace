@@ -5,8 +5,8 @@ import (
 	"database/sql"
 	"errors"
 
-	"marketplace/catalog/model"
-	"marketplace/platform/database"
+	"mercatus/catalog/model"
+	"mercatus/platform/database"
 )
 
 var ErrDuplicateCategory = errors.New("category already exists")

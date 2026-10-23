@@ -5,7 +5,7 @@ import (
 	"database/sql"
 	"errors"
 
-	"marketplace/auth/model"
+	"mercatus/auth/model"
 )
 
 var ErrTokenNotActive = errors.New("refresh token is not active")

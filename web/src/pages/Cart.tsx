@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { Zap } from "lucide-react";
 import { errorMessage } from "../api";
 import { useAuth } from "../auth";
 import { useCart } from "../cart";
@@ -100,9 +101,14 @@ export default function CartPage() {
       <p className="text-[18px]">
         Subtotal ({cart.item_count} {cart.item_count === 1 ? "item" : "items"}): <span className="font-bold tnum">{formatMoney(cart.subtotal)}</span>
       </p>
+      <p className="mt-1 text-xs text-muted">This is your final price. No shipping, taxes or fees are added at checkout.</p>
       <button className="btn-primary mt-4 w-full" disabled={cart.items.length === 0 || blocked} onClick={() => navigate("/checkout")}>
         Proceed to checkout
       </button>
+      <p className="mt-3 flex items-start gap-2 text-xs text-muted">
+        <Zap size={15} className="mt-px shrink-0 text-ok" aria-hidden />
+        Digital delivery. Each seller sends your license key or download link to your account email after payment.
+      </p>
       {blocked && <p className="mt-2 text-xs text-bad">Fix the items marked in red before checking out.</p>}
     </div>
   );

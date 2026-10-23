@@ -5,7 +5,7 @@ import (
 	"database/sql"
 	"time"
 
-	"marketplace/notification/model"
+	"mercatus/notification/model"
 )
 
 type NotificationRepository struct {

@@ -9,8 +9,7 @@ import type { Category } from "../types";
 function Logo() {
   return (
     <Link to="/" className="flex shrink-0 items-baseline rounded px-1 py-1 text-white hover:ring-1 hover:ring-white/60">
-      <span className="text-[22px] font-bold tracking-tight">sassendes</span>
-      <span className="text-[15px] font-semibold text-saffron">.shop</span>
+      <span className="text-[22px] font-bold tracking-tight">mercatus</span>
     </Link>
   );
 }
@@ -209,7 +208,7 @@ export function Header() {
             <Link to="/s?sort=price_asc" className="block whitespace-nowrap rounded px-2 py-1 hover:ring-1 hover:ring-white/60">Lowest prices</Link>
           </li>
           <li>
-            <Link to={user ? "/sell" : "/register?seller=1"} className="block whitespace-nowrap rounded px-2 py-1 hover:ring-1 hover:ring-white/60">Sell on sassendes</Link>
+            <Link to={user ? "/sell" : "/register?seller=1"} className="block whitespace-nowrap rounded px-2 py-1 hover:ring-1 hover:ring-white/60">Sell on Mercatus</Link>
           </li>
         </ul>
       </nav>

@@ -106,7 +106,8 @@ export async function api<T>(path: string, init: RequestInit & { json?: unknown 
 export function errorMessage(err: unknown): string {
   if (err instanceof ApiError) {
     if (err.status === 429) return "Too many attempts. Wait a moment and try again.";
+    if (err.status >= 500) return "Something went wrong on our side. Your data is safe, try again in a moment.";
     return err.message.charAt(0).toUpperCase() + err.message.slice(1);
   }
-  return "Something went wrong. Check your connection and try again.";
+  return "We could not reach Mercatus. Check your internet connection and try again.";
 }

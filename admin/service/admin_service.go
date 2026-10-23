@@ -6,8 +6,8 @@ import (
 	"strings"
 	"unicode/utf8"
 
-	"marketplace/admin/model"
-	"marketplace/admin/repository"
+	"mercatus/admin/model"
+	"mercatus/admin/repository"
 )
 
 var (

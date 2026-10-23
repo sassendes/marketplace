@@ -8,8 +8,8 @@ import (
 	"strings"
 	"time"
 
-	"marketplace/pipeline/model"
-	"marketplace/pipeline/repository"
+	"mercatus/pipeline/model"
+	"mercatus/pipeline/repository"
 )
 
 var (

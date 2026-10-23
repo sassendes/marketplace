@@ -10,7 +10,7 @@ import (
 	"fmt"
 	"log/slog"
 
-	authservice "marketplace/auth/service"
+	authservice "mercatus/auth/service"
 )
 
 type Options struct {

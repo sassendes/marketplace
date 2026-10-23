@@ -1,11 +1,11 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: marketplace
+  name: mercatus
 data:
   LOG_LEVEL: info
-  SEARCH_URL: http://marketplace-search:8092
-  FRAUD_URL: http://marketplace-fraud:8093
+  SEARCH_URL: http://mercatus-search:8092
+  FRAUD_URL: http://mercatus-fraud:8093
   TRUST_PROXY_HEADERS: "true"
   DB_MAX_OPEN_CONNS: "20"
   SHUTDOWN_DELAY: 5s

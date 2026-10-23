@@ -5,8 +5,8 @@ import (
 	"slices"
 	"testing"
 
-	"marketplace/pipeline/repository"
-	"marketplace/platform/database/dbtest"
+	"mercatus/pipeline/repository"
+	"mercatus/platform/database/dbtest"
 )
 
 func TestSagaHappyPath(t *testing.T) {

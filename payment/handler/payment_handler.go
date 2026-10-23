@@ -6,8 +6,8 @@ import (
 	"log/slog"
 	"net/http"
 
-	"marketplace/payment/middleware"
-	"marketplace/payment/service"
+	"mercatus/payment/middleware"
+	"mercatus/payment/service"
 
 	"github.com/go-chi/chi/v5"
 )

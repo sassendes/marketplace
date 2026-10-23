@@ -9,8 +9,8 @@ import (
 	"os"
 	"testing"
 
-	"marketplace/platform/database"
-	"marketplace/schema"
+	"mercatus/platform/database"
+	"mercatus/schema"
 )
 
 func New(t testing.TB) *sql.DB {

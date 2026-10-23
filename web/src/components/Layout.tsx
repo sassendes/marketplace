@@ -38,11 +38,18 @@ function Footer() {
           </ul>
         </div>
         <div>
-          <p className="mb-2 font-semibold text-white">Payments</p>
-          <p className="text-white/70">Test mode. Sellers deliver software directly after payment.</p>
+          <p className="mb-2 font-semibold text-white">About Mercatus</p>
+          <p className="text-white/70">A software marketplace where independent sellers list apps, tools and license keys and deliver them straight to buyers.</p>
+          <ul className="mt-3 space-y-1.5">
+            <li><a className="hover:underline" href="https://github.com/sassendes/mercatus" target="_blank" rel="noreferrer">Source code</a></li>
+            <li><Link className="hover:underline" to="/p/seller-guide">Seller guide</Link></li>
+          </ul>
         </div>
       </div>
-      <div className="border-t border-white/10 bg-ink py-5 text-center text-xs text-white/60">sassendes.shop</div>
+      <div className="border-t border-white/10 bg-ink py-5 text-center text-xs text-white/60">
+        <p>© {new Date().getFullYear()} Mercatus. Prices shown are final, with no fees added at checkout.</p>
+        <p className="mt-1">Payments run in test mode. No real money moves.</p>
+      </div>
     </footer>
   );
 }

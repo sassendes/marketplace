@@ -4,12 +4,12 @@ import (
 	"strconv"
 	"time"
 
-	"marketplace/auth/model"
+	"mercatus/auth/model"
 
 	"github.com/golang-jwt/jwt/v5"
 )
 
-const issuer = "marketplace"
+const issuer = "mercatus"
 
 type JWTManager struct {
 	secret         []byte

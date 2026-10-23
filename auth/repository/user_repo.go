@@ -5,8 +5,8 @@ import (
 	"database/sql"
 	"errors"
 
-	"marketplace/auth/model"
-	"marketplace/platform/database"
+	"mercatus/auth/model"
+	"mercatus/platform/database"
 )
 
 var ErrDuplicateEmail = errors.New("email already registered")

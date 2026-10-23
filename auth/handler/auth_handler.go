@@ -6,9 +6,9 @@ import (
 	"log/slog"
 	"net/http"
 
-	"marketplace/auth/middleware"
-	"marketplace/auth/model"
-	"marketplace/auth/service"
+	"mercatus/auth/middleware"
+	"mercatus/auth/model"
+	"mercatus/auth/service"
 
 	"github.com/go-chi/chi/v5"
 )

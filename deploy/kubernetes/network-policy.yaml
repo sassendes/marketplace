@@ -13,7 +13,7 @@ spec:
     - from:
         - podSelector:
             matchLabels:
-              app.kubernetes.io/name: marketplace
+              app.kubernetes.io/name: mercatus
               app.kubernetes.io/component: app
       ports:
         - { port: 8092 }

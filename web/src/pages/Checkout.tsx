@@ -1,6 +1,6 @@
 import { useMemo, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Lock } from "lucide-react";
+import { Lock, RotateCcw, ShieldCheck } from "lucide-react";
 import { ApiError, api, errorMessage } from "../api";
 import { useCart } from "../cart";
 import { Alert, Loading } from "../components/Feedback";
@@ -110,10 +110,16 @@ export default function Checkout() {
           <div className="panel p-5">
             <button onClick={place} disabled={busy} className="btn-primary w-full">{busy ? "Placing your order" : "Place your order"}</button>
             <p className="mt-2 text-center text-xs text-muted">Licenses are held for you while payment is processed.</p>
+            <ul className="mt-3 space-y-2 text-xs text-muted">
+              <li className="flex items-start gap-2"><ShieldCheck size={15} className="mt-px shrink-0 text-ok" aria-hidden />You are charged once, even if you click twice.</li>
+              <li className="flex items-start gap-2"><RotateCcw size={15} className="mt-px shrink-0 text-ok" aria-hidden />If any step of your order fails, the payment is reversed automatically.</li>
+            </ul>
             <div className="my-4 border-t border-line" />
             <h2 className="font-bold">Order summary</h2>
             <dl className="mt-2 space-y-1 text-sm tnum">
               <div className="flex justify-between"><dt>Items ({cart.item_count})</dt><dd>{formatMoney(cart.subtotal)}</dd></div>
+              <div className="flex justify-between text-muted"><dt>Delivery</dt><dd>Free, digital</dd></div>
+              <div className="flex justify-between text-muted"><dt>Fees</dt><dd>{formatMoney(0)}</dd></div>
             </dl>
             <div className="my-3 border-t border-line" />
             <div className="flex justify-between text-[18px] font-bold text-bad tnum"><span>Order total</span><span>{formatMoney(cart.subtotal)}</span></div>

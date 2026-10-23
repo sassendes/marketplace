@@ -1,8 +1,8 @@
-# Marketplace
+# Mercatus
 
 A multi-seller software marketplace (Amazon style) shipped as **one container image**. Sellers list apps, tools and license keys and deliver them to buyers themselves after payment. Out of the box the store only has one product: a $1 seller guide.
 
-- `marketplace` is a single static Go binary. It runs every Go service in one process, serves the React storefront, and also carries the `migrate` and `seed` commands.
+- `mercatus` is a single static Go binary. It runs every Go service in one process, serves the React storefront, and also carries the `migrate` and `seed` commands.
 - `search-engine` (BM25 ranking) and `fraud-engine` (risk scoring) are static Rust binaries in the same image. Run them as separate containers from that image.
 
 The only things it needs are a Postgres database and a few environment variables.
@@ -10,11 +10,11 @@ The only things it needs are a Postgres database and a few environment variables
 ## Run it
 
 ```bash
-docker build -t marketplace .
+docker build -t mercatus .
 
-docker run --rm -e DATABASE_URL=... marketplace migrate
-docker run --rm -e DATABASE_URL=... -e SEED_PASSWORD=demo-pass-123 marketplace seed
-docker run --rm -p 8080:8080 -e DATABASE_URL=... -e JWT_SECRET=$(openssl rand -base64 48) marketplace serve
+docker run --rm -e DATABASE_URL=... mercatus migrate
+docker run --rm -e DATABASE_URL=... -e SEED_PASSWORD=demo-pass-123 mercatus seed
+docker run --rm -p 8080:8080 -e DATABASE_URL=... -e JWT_SECRET=$(openssl rand -base64 48) mercatus serve
 ```
 
 Open http://localhost:8080. With `docker compose up --build` you get Postgres, migrations, seed data, the app and both engines in one go.
@@ -39,16 +39,16 @@ kubectl apply -f secret.yaml
 kubectl apply -k deploy/kubernetes
 ```
 
-Point an Ingress at the `marketplace` service on port 80. Scrape metrics on port 9090.
+Point an Ingress at the `mercatus` service on port 80. Scrape metrics on port 9090.
 
 ## Commands
 
 | Command | What it does |
 |---|---|
-| `marketplace serve [--only=auth,catalog,...]` | HTTP server. `--only` mounts a subset of modules so the same image can be split into separate deployments later. Refuses to start if migrations are pending. |
-| `marketplace migrate` | Applies embedded `schema/*.sql` in order, tracked in `schema_migrations` with checksums. |
-| `marketplace seed` | Inserts the admin, a demo buyer, the official store, software categories and the $1 seller guide. |
-| `marketplace healthcheck` | Probes `/healthz` on the local server, for Docker healthchecks. |
+| `mercatus serve [--only=auth,catalog,...]` | HTTP server. `--only` mounts a subset of modules so the same image can be split into separate deployments later. Refuses to start if migrations are pending. |
+| `mercatus migrate` | Applies embedded `schema/*.sql` in order, tracked in `schema_migrations` with checksums. |
+| `mercatus seed` | Inserts the admin, a demo buyer, the official store, software categories and the $1 seller guide. |
+| `mercatus healthcheck` | Probes `/healthz` on the local server, for Docker healthchecks. |
 
 ## Configuration
 
@@ -59,8 +59,8 @@ Point an Ingress at the `marketplace` service on port 80. Scrape metrics on port
 | `PORT` | `8080` | |
 | `METRICS_ADDR` | `:9090` | Prometheus `/metrics`, `off` to disable |
 | `LOG_LEVEL` / `LOG_FORMAT` | `info` / `json` | `text` for local dev |
-| `SEARCH_URL` | empty | e.g. `http://marketplace-search:8092`. Without it, search falls back to Postgres |
-| `FRAUD_URL` | empty | e.g. `http://marketplace-fraud:8093`. Without it, checkout skips fraud scoring |
+| `SEARCH_URL` | empty | e.g. `http://mercatus-search:8092`. Without it, search falls back to Postgres |
+| `FRAUD_URL` | empty | e.g. `http://mercatus-fraud:8093`. Without it, checkout skips fraud scoring |
 | `FRAUD_FAIL_OPEN` | `true` | approve orders when the fraud engine is unreachable |
 | `INTERNAL_TOKEN` | empty | shared bearer token between the app and the engines |
 | `TRUST_PROXY_HEADERS` | `false` | set `true` behind an ingress so rate limits use the real client IP |
@@ -75,7 +75,7 @@ Point an Ingress at the `marketplace` service on port 80. Scrape metrics on port
 ## Layout
 
 ```
-cmd/marketplace     the binary: wiring, server lifecycle, background jobs
+cmd/mercatus     the binary: wiring, server lifecycle, background jobs
 platform/           config, database + migrations, logging, metrics (infrastructure only, no domain logic)
 schema/             SQL migrations, embedded into the binary
 seed/               idempotent demo data
@@ -86,7 +86,7 @@ fraud-engine/       Rust risk scoring
 deploy/kubernetes/  kustomize base
 ```
 
-Each service keeps its own `model / repository / service / handler / middleware` and never imports another service. Cross-service calls (checkout touching cart, orders, inventory, payments) are wired as plain functions in `cmd/marketplace/app.go`.
+Each service keeps its own `model / repository / service / handler / middleware` and never imports another service. Cross-service calls (checkout touching cart, orders, inventory, payments) are wired as plain functions in `cmd/mercatus/app.go`.
 
 ## Money and checkout
 

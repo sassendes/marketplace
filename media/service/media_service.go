@@ -9,8 +9,8 @@ import (
 	"strings"
 	"time"
 
-	"marketplace/media/model"
-	"marketplace/media/repository"
+	"mercatus/media/model"
+	"mercatus/media/repository"
 )
 
 var (

@@ -7,8 +7,8 @@ import (
 	"sort"
 	"time"
 
-	"marketplace/order/model"
-	"marketplace/order/repository"
+	"mercatus/order/model"
+	"mercatus/order/repository"
 )
 
 var (

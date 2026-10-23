@@ -10,8 +10,8 @@ import (
 	"time"
 	"unicode/utf8"
 
-	"marketplace/catalog/model"
-	"marketplace/catalog/repository"
+	"mercatus/catalog/model"
+	"mercatus/catalog/repository"
 )
 
 var (

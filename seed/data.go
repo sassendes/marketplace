@@ -41,16 +41,16 @@ var categories = []category{
 
 var users = []user{
 	{"admin@example.com", "Platform Admin", "admin"},
-	{"store@example.com", "sassendes", "seller"},
+	{"store@example.com", "Mercatus", "seller"},
 	{"buyer@example.com", "Sam Buyer", "buyer"},
 }
 
 var sellers = []seller{
-	{"store@example.com", "sassendes", "sassendes", "Official marketplace store."},
+	{"store@example.com", "Mercatus", "mercatus", "The official Mercatus store."},
 }
 
 var products = []product{
-	{"store@example.com", "guides", "The Seller Guide: Selling Software on sassendes.shop", "seller-guide", "sassendes",
+	{"store@example.com", "guides", "The Seller Guide: Selling Software on Mercatus", "seller-guide", "Mercatus",
 		"Everything you need to open a store and sell software here: listing licenses and downloads, setting how many keys you have, delivering to buyers after payment, handling refunds and keeping your reviews strong. Delivered as a PDF by the sassendes store after purchase.",
 		[]variant{{SKU: "GUIDE-PDF", Price: 100, Stock: 100000, Attrs: map[string]any{"format": "PDF"}}}},
 }

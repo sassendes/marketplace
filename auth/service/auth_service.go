@@ -15,8 +15,8 @@ import (
 	"time"
 	"unicode/utf8"
 
-	"marketplace/auth/model"
-	"marketplace/auth/repository"
+	"mercatus/auth/model"
+	"mercatus/auth/repository"
 )
 
 var (

@@ -1,6 +1,6 @@
 import { Link, useSearchParams } from "react-router-dom";
 import { ProductGrid } from "../components/ProductCard";
-import { Alert, SkeletonGrid } from "../components/Feedback";
+import { Alert, SkeletonGrid, RetryButton } from "../components/Feedback";
 import { Page } from "../components/Layout";
 import { useFetch, useTitle } from "../hooks";
 import type { Category, ProductList } from "../types";
@@ -38,7 +38,7 @@ export default function Search() {
   }
   query.set("page", String(page));
   query.set("page_size", "24");
-  const { data, loading, error } = useFetch<ProductList>(`/catalog/products?${query.toString()}`);
+  const { data, loading, error, reload } = useFetch<ProductList>(`/catalog/products?${query.toString()}`);
 
   const current = categories?.find((c) => c.slug === category);
   useTitle(q ? `Results for ${q}` : current?.name ?? "All products");
@@ -140,7 +140,7 @@ export default function Search() {
             )}
           </aside>
           <section className="min-w-0 flex-1" aria-live="polite">
-            {error && <Alert>{error}</Alert>}
+            {error && <Alert action={<RetryButton onClick={reload} />}>Products could not be loaded. {error}</Alert>}
             {loading ? (
               <SkeletonGrid />
             ) : data && data.products.length > 0 ? (
@@ -169,9 +169,14 @@ export default function Search() {
             ) : (
               !error && (
                 <div className="panel p-8">
-                  <h2 className="text-lg font-bold">No products match your search</h2>
+                  <h2 className="text-lg font-bold">{q ? `No results for "${q}"` : "No products match these filters"}</h2>
                   <p className="mt-1 text-sm text-muted">Check the spelling, try a more general term, or remove a filter.</p>
-                  <Link to="/s" className="btn-primary mt-4">Browse all products</Link>
+                  <div className="mt-4 flex flex-wrap gap-2">
+                    {q && (activeMin || activeMax || category) && (
+                      <Link to={`/s?q=${encodeURIComponent(q)}`} className="btn-quiet">Keep the search, clear filters</Link>
+                    )}
+                    <Link to="/s" className="btn-primary">Browse all products</Link>
+                  </div>
                 </div>
               )
             )}

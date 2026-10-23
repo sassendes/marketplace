@@ -1,9 +1,9 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: marketplace
+  name: mercatus
   labels:
-    app.kubernetes.io/name: marketplace
+    app.kubernetes.io/name: mercatus
     app.kubernetes.io/component: app
 spec:
   replicas: 3
@@ -14,12 +14,12 @@ spec:
       maxSurge: 1
   selector:
     matchLabels:
-      app.kubernetes.io/name: marketplace
+      app.kubernetes.io/name: mercatus
       app.kubernetes.io/component: app
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: marketplace
+        app.kubernetes.io/name: mercatus
         app.kubernetes.io/component: app
       annotations:
         prometheus.io/scrape: "true"
@@ -39,15 +39,15 @@ spec:
           whenUnsatisfiable: ScheduleAnyway
           labelSelector:
             matchLabels:
-              app.kubernetes.io/name: marketplace
+              app.kubernetes.io/name: mercatus
               app.kubernetes.io/component: app
       initContainers:
         - name: migrate
-          image: marketplace
+          image: mercatus
           args: ["migrate"]
           envFrom:
             - secretRef:
-                name: marketplace
+                name: mercatus
           securityContext: &secure
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
@@ -58,16 +58,16 @@ spec:
             limits: { memory: 128Mi }
       containers:
         - name: app
-          image: marketplace
+          image: mercatus
           args: ["serve"]
           ports:
             - { name: http, containerPort: 8080 }
             - { name: metrics, containerPort: 9090 }
           envFrom:
             - configMapRef:
-                name: marketplace
+                name: mercatus
             - secretRef:
-                name: marketplace
+                name: mercatus
           securityContext: *secure
           resources:
             requests: { cpu: 100m, memory: 96Mi }
@@ -88,12 +88,12 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: marketplace
+  name: mercatus
   labels:
-    app.kubernetes.io/name: marketplace
+    app.kubernetes.io/name: mercatus
 spec:
   selector:
-    app.kubernetes.io/name: marketplace
+    app.kubernetes.io/name: mercatus
     app.kubernetes.io/component: app
   ports:
     - { name: http, port: 80, targetPort: http }
@@ -102,23 +102,23 @@ spec:
 apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
-  name: marketplace
+  name: mercatus
 spec:
   minAvailable: 2
   selector:
     matchLabels:
-      app.kubernetes.io/name: marketplace
+      app.kubernetes.io/name: mercatus
       app.kubernetes.io/component: app
 ---
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: marketplace
+  name: mercatus
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: marketplace
+    name: mercatus
   minReplicas: 3
   maxReplicas: 10
   metrics:
@@ -130,7 +130,7 @@ spec:
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: marketplace-seed
+  name: mercatus-seed
 spec:
   backoffLimit: 4
   ttlSecondsAfterFinished: 600
@@ -145,11 +145,11 @@ spec:
           type: RuntimeDefault
       initContainers:
         - name: migrate
-          image: marketplace
+          image: mercatus
           args: ["migrate"]
           envFrom:
             - secretRef:
-                name: marketplace
+                name: mercatus
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
@@ -157,11 +157,11 @@ spec:
               drop: ["ALL"]
       containers:
         - name: seed
-          image: marketplace
+          image: mercatus
           args: ["seed"]
           envFrom:
             - secretRef:
-                name: marketplace
+                name: mercatus
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true

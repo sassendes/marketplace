@@ -29,6 +29,6 @@ export function useFetch<T>(path: string | null, deps: unknown[] = []) {
 
 export function useTitle(title: string) {
   useEffect(() => {
-    document.title = title ? `${title} | sassendes.shop` : "sassendes.shop";
+    document.title = title ? `${title} | Mercatus` : "Mercatus";
   }, [title]);
 }

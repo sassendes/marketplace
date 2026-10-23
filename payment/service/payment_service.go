@@ -5,8 +5,8 @@ import (
 	"errors"
 	"strconv"
 
-	"marketplace/payment/model"
-	"marketplace/payment/repository"
+	"mercatus/payment/model"
+	"mercatus/payment/repository"
 )
 
 var (

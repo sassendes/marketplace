@@ -5,7 +5,7 @@ import (
 	"database/sql"
 	"errors"
 
-	"marketplace/admin/model"
+	"mercatus/admin/model"
 )
 
 var ErrTargetNotFound = errors.New("target not found")

@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"marketplace/platform/database/dbtest"
+	"mercatus/platform/database/dbtest"
 )
 
 func counts(t *testing.T, ctx context.Context, q func(string) int) map[string]int {

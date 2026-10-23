@@ -4,8 +4,8 @@ import (
 	"context"
 	"errors"
 
-	"marketplace/cart/model"
-	"marketplace/cart/repository"
+	"mercatus/cart/model"
+	"mercatus/cart/repository"
 )
 
 var (

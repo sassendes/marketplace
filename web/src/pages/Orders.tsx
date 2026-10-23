@@ -1,5 +1,5 @@
 import { Link, useParams, useSearchParams } from "react-router-dom";
-import { Alert, Loading } from "../components/Feedback";
+import { Alert, Loading, RetryButton } from "../components/Feedback";
 import { Page } from "../components/Layout";
 import { ProductImage } from "../components/ProductImage";
 import { formatDate, formatMoney } from "../format";
@@ -19,12 +19,12 @@ function StatusLine({ status }: { status: string }) {
 
 export function OrdersPage() {
   useTitle("Your orders");
-  const { data, loading, error } = useFetch<Order[]>("/orders");
+  const { data, loading, error, reload } = useFetch<Order[]>("/orders");
   return (
     <Page narrow>
       <h1 className="text-[26px] font-normal">Your orders</h1>
       {loading && <Loading />}
-      {error && <Alert>{error}</Alert>}
+      {error && <Alert action={<RetryButton onClick={reload} />}>Your orders could not be loaded. {error}</Alert>}
       {data && data.length === 0 && (
         <div className="panel mt-4 p-6">
           <p>You have not placed any orders yet.</p>

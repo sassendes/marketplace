@@ -7,8 +7,8 @@ import (
 	"time"
 	"unicode/utf8"
 
-	"marketplace/reviews/model"
-	"marketplace/reviews/repository"
+	"mercatus/reviews/model"
+	"mercatus/reviews/repository"
 )
 
 var (

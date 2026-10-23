@@ -9,7 +9,7 @@ import (
 	"net/http"
 	"time"
 
-	"marketplace/catalog/model"
+	"mercatus/catalog/model"
 )
 
 type SearchIndex interface {
