@@ -54,7 +54,7 @@ Point an Ingress at the `marketplace` service on port 80. Scrape metrics on port
 
 | Variable | Default | Notes |
 |---|---|---|
-| `DATABASE_URL` | required | Postgres DSN |
+| `DATABASE_URL` | required | Postgres DSN. Add `binary_parameters=yes` when connecting through PgBouncer in transaction mode, otherwise parameterized queries fail at random with `unnamed prepared statement does not exist` |
 | `JWT_SECRET` | required | at least 32 characters |
 | `PORT` | `8080` | |
 | `METRICS_ADDR` | `:9090` | Prometheus `/metrics`, `off` to disable |
