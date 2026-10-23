@@ -46,72 +46,62 @@ func LoadMigrations(fsys fs.FS) ([]Migration, error) {
 }
 
 func Migrate(ctx context.Context, db *sql.DB, migrations []Migration) (int, error) {
-	conn, err := db.Conn(ctx)
+	count := 0
+	for _, m := range migrations {
+		applied, err := applyMigration(ctx, db, m)
+		if err != nil {
+			return count, err
+		}
+		if applied {
+			slog.Info("applied migration", "version", m.Version)
+			count++
+		}
+	}
+	return count, nil
+}
+
+func applyMigration(ctx context.Context, db *sql.DB, m Migration) (bool, error) {
+	tx, err := db.BeginTx(ctx, nil)
 	if err != nil {
-		return 0, err
+		return false, err
 	}
-	defer conn.Close()
+	defer tx.Rollback()
 
-	if _, err := conn.ExecContext(ctx, `SELECT pg_advisory_lock($1)`, migrationLockKey); err != nil {
-		return 0, fmt.Errorf("acquire migration lock: %w", err)
+	if _, err := tx.ExecContext(ctx, `SELECT pg_advisory_xact_lock($1)`, migrationLockKey); err != nil {
+		return false, fmt.Errorf("acquire migration lock: %w", err)
 	}
-	defer conn.ExecContext(context.Background(), `SELECT pg_advisory_unlock($1)`, migrationLockKey)
-
-	if _, err := conn.ExecContext(ctx, `
+	if _, err := tx.ExecContext(ctx, `
 		CREATE TABLE IF NOT EXISTS schema_migrations (
 			version    TEXT PRIMARY KEY,
 			checksum   TEXT NOT NULL,
 			applied_at TIMESTAMPTZ NOT NULL DEFAULT now()
 		)`); err != nil {
-		return 0, fmt.Errorf("create schema_migrations: %w", err)
+		return false, fmt.Errorf("create schema_migrations: %w", err)
 	}
 
-	applied := map[string]string{}
-	rows, err := conn.QueryContext(ctx, `SELECT version, checksum FROM schema_migrations`)
-	if err != nil {
-		return 0, err
-	}
-	for rows.Next() {
-		var v, c string
-		if err := rows.Scan(&v, &c); err != nil {
-			rows.Close()
-			return 0, err
+	var sum string
+	err = tx.QueryRowContext(ctx, `SELECT checksum FROM schema_migrations WHERE version = $1`, m.Version).Scan(&sum)
+	switch {
+	case err == nil:
+		if sum != m.Checksum {
+			return false, fmt.Errorf("migration %s was modified after it was applied (checksum mismatch)", m.Version)
 		}
-		applied[v] = c
-	}
-	rows.Close()
-	if err := rows.Err(); err != nil {
-		return 0, err
+		return false, tx.Commit()
+	case err != sql.ErrNoRows:
+		return false, err
 	}
 
-	count := 0
-	for _, m := range migrations {
-		if sum, ok := applied[m.Version]; ok {
-			if sum != m.Checksum {
-				return count, fmt.Errorf("migration %s was modified after it was applied (checksum mismatch)", m.Version)
-			}
-			continue
-		}
-		tx, err := conn.BeginTx(ctx, nil)
-		if err != nil {
-			return count, err
-		}
-		if _, err := tx.ExecContext(ctx, m.SQL); err != nil {
-			tx.Rollback()
-			return count, fmt.Errorf("apply migration %s: %w", m.Version, err)
-		}
-		if _, err := tx.ExecContext(ctx,
-			`INSERT INTO schema_migrations (version, checksum) VALUES ($1, $2)`, m.Version, m.Checksum); err != nil {
-			tx.Rollback()
-			return count, err
-		}
-		if err := tx.Commit(); err != nil {
-			return count, err
-		}
-		slog.Info("applied migration", "version", m.Version)
-		count++
+	if _, err := tx.ExecContext(ctx, m.SQL); err != nil {
+		return false, fmt.Errorf("apply migration %s: %w", m.Version, err)
 	}
-	return count, nil
+	if _, err := tx.ExecContext(ctx,
+		`INSERT INTO schema_migrations (version, checksum) VALUES ($1, $2)`, m.Version, m.Checksum); err != nil {
+		return false, err
+	}
+	if err := tx.Commit(); err != nil {
+		return false, err
+	}
+	return true, nil
 }
 
 func PendingMigrations(ctx context.Context, db *sql.DB, migrations []Migration) ([]string, error) {
