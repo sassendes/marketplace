@@ -61,7 +61,7 @@ Point an Ingress at the `mercatus` service on port 80. Scrape metrics on port 90
 | `LOG_LEVEL` / `LOG_FORMAT` | `info` / `json` | `text` for local dev |
 | `SEARCH_URL` | empty | e.g. `http://mercatus-search:8092`. Without it, search falls back to Postgres |
 | `FRAUD_URL` | empty | e.g. `http://mercatus-fraud:8093`. Without it, checkout skips fraud scoring |
-| `FRAUD_FAIL_OPEN` | `true` | approve orders when the fraud engine is unreachable |
+| `FRAUD_FAIL_OPEN` | `false` | approve orders when the fraud engine is unreachable instead of declining them |
 | `INTERNAL_TOKEN` | empty | shared bearer token between the app and the engines |
 | `TRUST_PROXY_HEADERS` | `false` | set `true` behind an ingress so rate limits use the real client IP |
 | `RATE_LIMIT_RPS` / `RATE_LIMIT_BURST` | `20` / `60` | per client IP, per pod |

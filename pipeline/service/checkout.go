@@ -15,6 +15,7 @@ import (
 var (
 	ErrEmptyCart       = errors.New("your cart is empty")
 	ErrFraudDeclined   = errors.New("this order could not be processed")
+	ErrFraudReview     = errors.New("this order needs a manual review")
 	ErrCheckoutFailed  = errors.New("checkout failed")
 	ErrInvalidKey      = errors.New("idempotency key must be 8-100 characters")
 	ErrSagaNotFound    = errors.New("checkout not found")
@@ -115,6 +116,8 @@ func publicError(msg string) string {
 		return "your payment was declined"
 	case strings.Contains(msg, ErrFraudDeclined.Error()):
 		return ErrFraudDeclined.Error()
+	case strings.Contains(msg, ErrFraudReview.Error()):
+		return "this order needs a manual check before it can go through"
 	case strings.Contains(msg, "no longer available"):
 		return "an item in your cart is no longer available"
 	default:
@@ -184,7 +187,9 @@ func (c *CheckoutService) Checkout(ctx context.Context, buyerID int64, key strin
 			return fail(ErrFraudDeclined)
 		}
 		if decision == FraudReview {
-			slog.WarnContext(ctx, "order flagged for fraud review", "order_id", order.ID, "buyer_id", buyerID)
+			slog.WarnContext(ctx, "order held for fraud review", "order_id", order.ID, "buyer_id", buyerID)
+			_ = c.deps.CancelOrder(ctx, order.ID)
+			return fail(ErrFraudReview)
 		}
 	}
 
@@ -218,6 +223,9 @@ func (c *CheckoutService) Checkout(ctx context.Context, buyerID int64, key strin
 	}
 
 	if err := c.engine.Run(ctx, saga, steps); err != nil {
+		if rerr := c.deps.RefundOrder(ctx, order.ID); rerr != nil {
+			slog.ErrorContext(ctx, "could not refund order after failed checkout", "order_id", order.ID, "error", rerr)
+		}
 		if cerr := c.deps.CancelOrder(ctx, order.ID); cerr != nil {
 			slog.ErrorContext(ctx, "could not cancel order after failed checkout", "order_id", order.ID, "error", cerr)
 		}

@@ -118,6 +118,12 @@ func (r *PaymentRepository) Refund(ctx context.Context, paymentID int64, entries
 	return r.transitionWithLedger(ctx, paymentID, model.StatusCaptured, model.StatusRefunded, "", entries)
 }
 
+func (r *PaymentRepository) SetProviderRef(ctx context.Context, paymentID int64, providerRef string) error {
+	_, err := r.db.ExecContext(ctx,
+		`UPDATE payments SET provider_ref = $1, updated_at = now() WHERE id = $2 AND status = 'pending'`, providerRef, paymentID)
+	return err
+}
+
 func (r *PaymentRepository) Fail(ctx context.Context, paymentID int64) error {
 	_, err := r.db.ExecContext(ctx,
 		`UPDATE payments SET status = 'failed', updated_at = now() WHERE id = $1 AND status = 'pending'`, paymentID)

@@ -59,7 +59,7 @@ func Load() (*Config, error) {
 		DBConnMaxLifetime:    envDuration("DB_CONN_MAX_LIFETIME", 30*time.Minute),
 		SearchURL:            strings.TrimRight(os.Getenv("SEARCH_URL"), "/"),
 		FraudURL:             strings.TrimRight(os.Getenv("FRAUD_URL"), "/"),
-		FraudFailOpen:        envBool("FRAUD_FAIL_OPEN", true),
+		FraudFailOpen:        envBool("FRAUD_FAIL_OPEN", false),
 		InternalToken:        os.Getenv("INTERNAL_TOKEN"),
 		CORSOrigins:          envList("CORS_ORIGINS"),
 		TrustProxyHeaders:    envBool("TRUST_PROXY_HEADERS", false),

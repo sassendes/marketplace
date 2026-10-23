@@ -96,13 +96,30 @@ func (s *PaymentService) Charge(ctx context.Context, buyerID int64, req *model.C
 		return p, errors.Join(ErrPaymentFailed, err)
 	}
 
+	bg := context.WithoutCancel(ctx)
+	p.ProviderRef = providerRef
+	if err := s.payments.SetProviderRef(bg, p.ID, providerRef); err != nil {
+		return p, s.undoCharge(bg, p, err)
+	}
+
 	entries := buildLedger(p.ID, buyerID, currency, req)
-	if err := s.payments.Capture(context.WithoutCancel(ctx), p.ID, providerRef, entries); err != nil {
-		return nil, err
+	if err := s.payments.Capture(bg, p.ID, providerRef, entries); err != nil {
+		return p, s.undoCharge(bg, p, err)
 	}
 	p.Status = model.StatusCaptured
 	p.ProviderRef = providerRef
 	return p, nil
+}
+
+func (s *PaymentService) undoCharge(ctx context.Context, p *model.Payment, cause error) error {
+	if err := s.provider.Refund(ctx, p.ProviderRef, p.AmountCents); err != nil {
+		return errors.Join(ErrPaymentFailed, cause, err)
+	}
+	if err := s.payments.Fail(ctx, p.ID); err != nil {
+		return errors.Join(ErrPaymentFailed, cause, err)
+	}
+	p.Status = model.StatusFailed
+	return errors.Join(ErrPaymentFailed, cause)
 }
 
 func buildLedger(paymentID, buyerID int64, currency string, req *model.ChargeRequest) []model.LedgerEntry {
@@ -133,6 +150,11 @@ func (s *PaymentService) Refund(ctx context.Context, paymentID int64) error {
 	case model.StatusRefunded, model.StatusFailed:
 		return nil
 	case model.StatusPending:
+		if p.ProviderRef != "" {
+			if err := s.provider.Refund(ctx, p.ProviderRef, p.AmountCents); err != nil {
+				return err
+			}
+		}
 		return s.payments.Fail(ctx, p.ID)
 	}
 	if err := s.provider.Refund(ctx, p.ProviderRef, p.AmountCents); err != nil {
